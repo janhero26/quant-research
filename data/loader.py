@@ -4,8 +4,12 @@ from schema import get_connection
 
 # S&P 500 tickers von Wikipedia
 def get_sp500_tickers():
-    # hardcoded for now, Wikipedia scraping gets blocked
-    return ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "META", "TSLA", "JPM", "V", "UNH"]
+    url = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
+    df = pd.read_csv(url)
+    tickers = df["Symbol"].tolist()
+    # yfinance braucht - statt . bei Tickern wie BRK.B
+    tickers = [t.replace(".", "-") for t in tickers]
+    return tickers
 
 def fetch_and_store(ticker, start="2015-01-01", end="2024-01-01"):
     df = yf.download(ticker, start=start, end=end, auto_adjust=True, progress=False)
@@ -40,6 +44,7 @@ def fetch_and_store(ticker, start="2015-01-01", end="2024-01-01"):
 
 if __name__ == "__main__":
     tickers = get_sp500_tickers()
-    # erstmal nur die ersten 10 zum testen
-    for t in tickers[:10]:
+    print(f"Loading {len(tickers)} tickers...")
+    for i, t in enumerate(tickers):
+        print(f"[{i+1}/{len(tickers)}] {t}")
         fetch_and_store(t)

@@ -16,19 +16,19 @@ Loads historical price data, generates trading signals from a strategy, runs a b
 
 ## Current results
 
-Momentum strategy on a 10-stock universe (2015-2023):
+Momentum strategy on the current S&P 500 universe (2015-2023):
 
 | Metric | Value |
 |--------|-------|
-| CAGR | 44.5% |
-| Sharpe | 1.17 |
-| Max Drawdown | -44.6% |
+| CAGR | 14.7% |
+| Sharpe | 0.88 |
+| Max Drawdown | -19.7% |
 
 ## Known limitations
 
-These numbers are not realistic and should not be read as a viable strategy. The current test universe is 10 hand-picked mega-cap tech stocks (AAPL, MSFT, NVDA, META, ...), all of which performed exceptionally well in this period. This is textbook survivorship bias: the result reflects the choice of universe, not the strategy.
+The backtest uses the *current* S&P 500 constituents applied to historical data. Stocks that were in the index during the test period but later dropped out are missing. This is a milder but real form of survivorship bias: the universe is biased toward companies that survived and stayed in the index.
 
-To make the backtest meaningful, the universe needs to be the full S&P 500 as it was historically constituted, including stocks that later dropped out of the index. This is the main thing on the roadmap.
+Removing this fully would require point-in-time index membership data, which is not freely available. The current results should be read with this caveat in mind.
 
 ## Roadmap
 
