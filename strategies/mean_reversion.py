@@ -9,22 +9,19 @@ def get_prices():
     con.close()
     return df
 
-def mean_reversion_signals(lookback_months=1, bottom_pct=0.2):
+def mean_reversion_signals(lookback_months=1, n_stocks=20):
     df = get_prices()
     prices = df.pivot(index="date", columns="ticker", values="close")
     monthly = prices.resample("ME").last()
-
-    # kurzfristiger return (letzter Monat)
     returns = monthly.pct_change(lookback_months)
 
-    # fuer jeden Monat: die schlechtesten 20% kaufen
     signals = {}
     for date, row in returns.iterrows():
         row = row.dropna()
         if row.empty:
             continue
-        threshold = row.quantile(bottom_pct)
-        buy = row[row <= threshold].index.tolist()
+        # die n schwaechsten
+        buy = row.nsmallest(n_stocks).index.tolist()
         signals[date] = buy
 
     return signals

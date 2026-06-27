@@ -9,26 +9,19 @@ def get_prices():
     con.close()
     return df
 
-def momentum_signals(lookback_months=12, top_pct=0.2):
+def momentum_signals(lookback_months=12, n_stocks=20):
     df = get_prices()
-
-    # pivot: rows = dates, columns = tickers
     prices = df.pivot(index="date", columns="ticker", values="close")
-
-    # monatliche resampling
     monthly = prices.resample("ME").last()
-
-    # 12-Monats-Return für jeden Ticker
     returns = monthly.pct_change(lookback_months)
 
-    # für jeden Monat: top 20% = buy, rest = ignore
     signals = {}
     for date, row in returns.iterrows():
         row = row.dropna()
         if row.empty:
             continue
-        threshold = row.quantile(1 - top_pct)
-        buy = row[row >= threshold].index.tolist()
+        # die n staerksten
+        buy = row.nlargest(n_stocks).index.tolist()
         signals[date] = buy
 
     return signals
