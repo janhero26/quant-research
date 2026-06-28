@@ -3,11 +3,13 @@ sys.path.append(".")
 
 from strategies.momentum import momentum_signals
 from strategies.mean_reversion import mean_reversion_signals
+from strategies.benchmark import benchmark_signals
 from backtester.engine import run_backtest
 from metrics.performance import compute_metrics
 
 def compare():
     strategies = {
+        "benchmark": benchmark_signals,
         "momentum": momentum_signals,
         "mean_reversion": mean_reversion_signals,
     }
