@@ -16,13 +16,16 @@ Loads historical price data, generates trading signals from a strategy, runs a b
 
 ## Current results
 
-Momentum strategy on the current S&P 500 universe (2015-2023):
+Two strategies on the S&P 500 universe, concentrated 20-stock portfolios, monthly rebalancing (2015-2023):
 
-| Metric | Value |
-|--------|-------|
-| CAGR | 14.7% |
-| Sharpe | 0.88 |
-| Max Drawdown | -19.7% |
+| Strategy | CAGR | Sharpe | Max Drawdown |
+|----------|------|--------|--------------|
+| Momentum | 22.8% | 0.95 | -28.9% |
+| Mean-Reversion | 14.6% | 0.58 | -49.1% |
+
+Momentum outperforms mean-reversion on both return and risk-adjusted return, and has a much smaller drawdown. This is consistent with the academic literature: cross-sectional momentum is one of the most robust documented factors, while naive monthly mean-reversion on single stocks tends to be weak.
+
+Portfolio concentration matters a lot here. With wide portfolios (e.g. top 20% = ~100 stocks) both strategies collapse toward the market return and become indistinguishable. The signal only shows up with concentrated portfolios.
 
 ## Known limitations
 
