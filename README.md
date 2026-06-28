@@ -16,16 +16,19 @@ Loads historical price data, generates trading signals from a strategy, runs a b
 
 ## Current results
 
-Two strategies on the S&P 500 universe, concentrated 20-stock portfolios, monthly rebalancing (2015-2023):
+Strategies vs an equal-weight buy-and-hold benchmark on the S&P 500 universe, concentrated 20-stock portfolios, monthly rebalancing (2015-2023):
 
 | Strategy | CAGR | Sharpe | Max Drawdown |
 |----------|------|--------|--------------|
+| Benchmark (buy & hold) | 12.2% | 0.76 | -24.4% |
 | Momentum | 22.8% | 0.95 | -28.9% |
 | Mean-Reversion | 14.6% | 0.58 | -49.1% |
 
-Momentum outperforms mean-reversion on both return and risk-adjusted return, and has a much smaller drawdown. This is consistent with the academic literature: cross-sectional momentum is one of the most robust documented factors, while naive monthly mean-reversion on single stocks tends to be weak.
+Momentum beats the benchmark on both absolute return and risk-adjusted return (higher Sharpe), at the cost of a slightly larger drawdown. This is a real outperformance, not just leverage on market risk.
 
-Portfolio concentration matters a lot here. With wide portfolios (e.g. top 20% = ~100 stocks) both strategies collapse toward the market return and become indistinguishable. The signal only shows up with concentrated portfolios.
+Mean-reversion is more interesting as a negative result: its CAGR is barely above the benchmark, but its Sharpe is *worse* (0.58 vs 0.76) and its drawdown is nearly double. Risk-adjusted, naive monthly mean-reversion does not beat simply holding the market here.
+
+Comparing against a benchmark matters: an absolute return figure means little without knowing what the market did over the same period.
 
 ## Known limitations
 
