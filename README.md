@@ -25,6 +25,8 @@ Strategies vs an equal-weight buy-and-hold benchmark on the S&P 500 universe, co
 | Mean-Reversion | 14.6% | 0.58 | -49.1% |
 | Low-Volatility | 7.9% | 0.63 | -20.7% |
 
+![Equity curves](equity_curves.png)
+
 Reading the table:
 
 - **Momentum** is the only strategy that beats the benchmark on a risk-adjusted basis (Sharpe 0.95 vs 0.76). This is consistent with momentum being one of the most robust documented factors.
