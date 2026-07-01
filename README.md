@@ -6,6 +6,19 @@ Backtesting and strategy research framework for US equities.
 
 Loads historical price data, generates trading signals from a strategy, runs a backtest with transaction costs, and computes performance metrics. Results are stored in SQLite.
 
+## Web dashboard
+
+A FastAPI backend serves the stored backtest results as JSON, and a simple frontend displays them as a table and chart.
+
+Run all strategies and store the results, then start the dashboard:
+
+```
+python run_all.py
+uvicorn web.app:app --reload
+```
+
+Then open http://127.0.0.1:8000 in the browser.
+
 ## Pipeline
 
 1. `data/loader.py` - fetches price data via yfinance, stores it in SQLite
