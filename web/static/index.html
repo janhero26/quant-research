@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quant Research Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #fafafa;
+            color: #222;
+        }
+        h1 { font-size: 1.6rem; }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: right;
+        }
+        th:first-child, td:first-child { text-align: left; }
+        th { background: #f0f0f0; }
+        canvas { background: white; padding: 10px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Quant Research Dashboard</h1>
+    <p>Backtest results: strategies vs benchmark on the S&P 500 (2015-2023).</p>
+
+    <table id="results-table">
+        <thead>
+            <tr>
+                <th>Strategy</th>
+                <th>CAGR</th>
+                <th>Sharpe</th>
+                <th>Max Drawdown</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <canvas id="chart" width="800" height="400"></canvas>
+
+    <script>
+        async function load() {
+            const res = await fetch("/api/results");
+            const data = await res.json();
+
+            // tabelle fuellen
+            const tbody = document.querySelector("#results-table tbody");
+            data.forEach(row => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${row.strategy}</td>
+                    <td>${(row.cagr * 100).toFixed(1)}%</td>
+                    <td>${row.sharpe.toFixed(2)}</td>
+                    <td>${(row.max_drawdown * 100).toFixed(1)}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // chart: CAGR pro strategie
+            new Chart(document.getElementById("chart"), {
+                type: "bar",
+                data: {
+                    labels: data.map(r => r.strategy),
+                    datasets: [{
+                        label: "CAGR",
+                        data: data.map(r => (r.cagr * 100).toFixed(1)),
+                        backgroundColor: "#4a90d9"
+                    }]
+                },
+                options: {
+                    scales: { y: { title: { display: true, text: "CAGR (%)" } } }
+                }
+            });
+        }
+
+        load();
+    </script>
+</body>
+</html>
