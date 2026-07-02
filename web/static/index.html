@@ -7,13 +7,14 @@
     <style>
         body {
             font-family: system-ui, sans-serif;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 40px auto;
             padding: 0 20px;
             background: #fafafa;
             color: #222;
         }
         h1 { font-size: 1.6rem; }
+        h2 { font-size: 1.2rem; margin-top: 40px; }
         table {
             border-collapse: collapse;
             width: 100%;
@@ -46,14 +47,20 @@
         <tbody></tbody>
     </table>
 
-    <canvas id="chart" width="800" height="400"></canvas>
+    <h2>Equity curves</h2>
+    <canvas id="equity-chart" width="900" height="450"></canvas>
 
     <script>
-        async function load() {
+        const colors = {
+            benchmark: "#888888",
+            momentum: "#e6892b",
+            mean_reversion: "#4a90d9",
+            low_volatility: "#c0392b"
+        };
+
+        async function loadTable() {
             const res = await fetch("/api/results");
             const data = await res.json();
-
-            // tabelle fuellen
             const tbody = document.querySelector("#results-table tbody");
             data.forEach(row => {
                 const tr = document.createElement("tr");
@@ -65,25 +72,40 @@
                 `;
                 tbody.appendChild(tr);
             });
+        }
 
-            // chart: CAGR pro strategie
-            new Chart(document.getElementById("chart"), {
-                type: "bar",
-                data: {
-                    labels: data.map(r => r.strategy),
-                    datasets: [{
-                        label: "CAGR",
-                        data: data.map(r => (r.cagr * 100).toFixed(1)),
-                        backgroundColor: "#4a90d9"
-                    }]
-                },
+        async function loadEquity() {
+            const res = await fetch("/api/equity");
+            const data = await res.json();
+
+            // benchmark als referenz fuer die x-achse (labels)
+            const labels = data.benchmark.dates;
+
+            const datasets = Object.keys(data).map(name => ({
+                label: name,
+                data: data[name].equity,
+                borderColor: colors[name] || "#333",
+                borderWidth: 1.5,
+                pointRadius: 0,
+                fill: false
+            }));
+
+            new Chart(document.getElementById("equity-chart"), {
+                type: "line",
+                data: { labels: labels, datasets: datasets },
                 options: {
-                    scales: { y: { title: { display: true, text: "CAGR (%)" } } }
+                    responsive: true,
+                    interaction: { mode: "index", intersect: false },
+                    scales: {
+                        x: { ticks: { maxTicksLimit: 10 } },
+                        y: { title: { display: true, text: "Portfolio Value" } }
+                    }
                 }
             });
         }
 
-        load();
+        loadTable();
+        loadEquity();
     </script>
 </body>
 </html>
